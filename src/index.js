@@ -1,23 +1,27 @@
 const dotenv = require('dotenv')
 const express = require('express')
 const cors = require('cors')
+const router = require('./routes/index')
+const errorHandler = require('./middlewares/errorHandler');
+const delayInjector = require('./middlewares/delayInjector');
 
-//initialize environment variables
+// initialize environment variables
 dotenv.config()
 const PORT = process.env.PORT || 8001
 
-//creating express app
+// creating express app
 const app = express()
 
-//for parsing incoming requests with JSON payload
+// for parsing incoming requests with JSON payload
 app.use(express.json())
-//to enable cors
+// to enable cors
 app.use(cors())
+// delay to simulate reallife server behaviour
+app.use(delayInjector);
 
-//for test
-app.get('/', (req, res) => {
-    res.send('hello world')
-  })
+app.use('/', router);
+// middleware for errors
+app.use(errorHandler);
 
 const start = async () => {
     try {
