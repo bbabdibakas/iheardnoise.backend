@@ -4,6 +4,8 @@ const cors = require('cors')
 const router = require('./routes/index')
 const errorHandler = require('./middlewares/errorHandler');
 const delayInjector = require('./middlewares/delayInjector');
+const checkAuth = require('./middlewares/checkAuth');
+const authRouter = require('./routes/authRouter')
 
 // initialize environment variables
 dotenv.config()
@@ -18,7 +20,9 @@ app.use(express.json())
 app.use(cors())
 // delay to simulate reallife server behaviour
 app.use(delayInjector);
-
+app.use('/auth', authRouter)
+// middlware to check authorization header
+app.use(checkAuth)
 app.use('/', router);
 // middleware for errors
 app.use(errorHandler);
